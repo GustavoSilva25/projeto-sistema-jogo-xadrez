@@ -28,6 +28,9 @@ public class Position {
         this.column = column;
     }
 
-    public void setValue(Integer row , Integer column){
+    public void setValue(Integer row, Integer column) {
+        this.rows = row;
+        this.column = column;
     }
+
 }
