@@ -1,23 +1,23 @@
 package boardgame;
 
 public class Position {
-    private Integer rows;
+    private Integer row;
     private Integer column;
 
     public Position(){
     }
 
     public Position(Integer row, Integer column) {
-        this.rows = rows;
+        this.row = row;
         this.column = column;
     }
 
-    public Integer getRows() {
-        return rows;
+    public Integer getRow() {
+        return row;
     }
 
     public void setRows(Integer rows) {
-        this.rows = rows;
+        this.row = rows;
     }
 
     public Integer getColumn() {
@@ -29,7 +29,7 @@ public class Position {
     }
 
     public void setValue(Integer row, Integer column) {
-        this.rows = row;
+        this.row = row;
         this.column = column;
     }
 
