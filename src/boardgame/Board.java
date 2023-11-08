@@ -45,12 +45,12 @@ public class Board {
         piece.positon = position;
     }
 
-    public boolean isValidPosition(int row , int column) {
-        return  row >= 0 && row < rows && column >= 0 && column < columns;
-    }
-
     public boolean positionExists(Position position){
         return isValidPosition(position.getRow(),position.getColumn());
+    }
+
+    public boolean isValidPosition(int row , int column) {
+        return  row >= 0 && row < rows && column >= 0 && column < columns;
     }
 
     public boolean thereIsAPiece(Position position) {
