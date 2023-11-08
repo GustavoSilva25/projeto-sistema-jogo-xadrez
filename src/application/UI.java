@@ -1,7 +1,11 @@
 package application;
 
 import chess.ChessPiece;
+import chess.ChessPosition;
 import chess.Color;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class UI {
 
@@ -17,6 +21,17 @@ public class UI {
     // representa a cor preta.
     public static final String ANSI_BLACK = "\u001B[30m";
 
+    public static ChessPosition readChessPosition(Scanner scanner){
+        try {
+            String s = scanner.nextLine();
+            char column = s.charAt(0);
+            int row = Integer.parseInt(s.substring(1));
+            return new ChessPosition(column,row);
+        }
+        catch (RuntimeException r){
+            throw new InputMismatchException("Erro lendo posição do xadrez. Valores válidos são de a1 a h8");
+        }
+    }
 
     public static void printBoard(ChessPiece[][] pieces) {
         for(int i=0; i< pieces.length; i++){

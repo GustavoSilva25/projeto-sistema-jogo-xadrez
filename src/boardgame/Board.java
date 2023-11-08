@@ -45,6 +45,20 @@ public class Board {
         piece.positon = position;
     }
 
+    public Piece removePiece(Position position){
+        if(!positionExists(position)){
+            throw new BoardException("Posição fora dos limites do tabuleiro");
+        }
+        if(piece(position) == null){
+            return null;
+        }
+        Piece pieceToRemove = piece(position);
+        pieceToRemove.positon = null;
+
+        pieces[position.getRow()][position.getColumn()] = null;
+        return pieceToRemove;
+    }
+
     public boolean positionExists(Position position){
         return isValidPosition(position.getRow(),position.getColumn());
     }

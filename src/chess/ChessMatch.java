@@ -1,6 +1,7 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Piece;
 import boardgame.Position;
 import chess.Pieces.King;
 import chess.Pieces.Pawn;
@@ -24,6 +25,31 @@ public class ChessMatch {
         }
         return matrix;
     }
+
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
+        Position source = sourcePosition.toPosition();
+        Position target = targetPosition.toPosition();
+
+        validatePosition(source);
+        Piece capturedPiece = makeMove(source,target);
+
+        return (ChessPiece) capturedPiece;
+    }
+
+    public void validatePosition(Position position){
+        if(!board.thereIsAPiece(position)){
+            throw new ChessException("não há nenhuma peça na posição de origem");
+        }
+    }
+
+    private Piece makeMove(Position source, Position target){
+        Piece piece = board.removePiece(source);
+        Piece capturedPiece = board.removePiece(target);
+        board.placePiece(piece,target);
+        return capturedPiece;
+    }
+
+
     private void setPieceAtPosition(char column, int row, ChessPiece piece){
         board.placePiece(piece,new ChessPosition(column,row).toPosition());
     }
