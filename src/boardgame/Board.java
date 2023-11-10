@@ -42,7 +42,7 @@ public class Board {
             throw new BoardException("já existe uma peça na posição");
         }
         pieces[position.getRow()][position.getColumn()] = piece;
-        piece.positon = position;
+        piece.position = position;
     }
 
     public Piece removePiece(Position position){
@@ -53,7 +53,7 @@ public class Board {
             return null;
         }
         Piece pieceToRemove = piece(position);
-        pieceToRemove.positon = null;
+        pieceToRemove.position = null;
 
         pieces[position.getRow()][position.getColumn()] = null;
         return pieceToRemove;
