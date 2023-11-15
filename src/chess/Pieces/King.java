@@ -38,14 +38,14 @@ public class King extends ChessPiece {
     }
 
     public void moveUp(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() -1, position.getColumn());
+       p.setValues(position.getRow() -1, position.getColumn());
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveLeft(boolean[][] mat, Position p) {
-        p.setValues(position.getRow(), position.getColumn() - 1);
+            p.setValues(position.getRow(), position.getColumn() - 1);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
