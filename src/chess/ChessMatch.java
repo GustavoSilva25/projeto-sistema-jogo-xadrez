@@ -113,10 +113,11 @@ public class ChessMatch {
 
     // Realizar um movimento no tabuleiro.
     private Piece makeMove(Position source, Position target) {
-        Piece p = board.removePiece(source);
+        Piece p = (ChessPiece)board.removePiece(source);
+        p.increaseMoveCount();
         Piece capturedPiece = board.removePiece(target);
         board.placePiece(p, target);
-
+        
         if (capturedPiece!= null) {
             piecesOnTheBoard.remove(capturedPiece);
             capturedPieces.add(capturedPiece);
