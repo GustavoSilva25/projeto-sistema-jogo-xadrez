@@ -1,15 +1,15 @@
-package chess.Pieces;
+package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-public class King extends ChessPiece {
-    public King(Board board, Color color) {
+public class Knight extends ChessPiece {
+
+    public Knight(Board board, Color color) {
         super(board, color);
     }
-
 
 
     @Override
@@ -38,56 +38,56 @@ public class King extends ChessPiece {
     }
 
     public void moveUp(boolean[][] mat, Position p) {
-       p.setValues(position.getRow() -1, position.getColumn());
+       p.setValues(position.getRow() -1, position.getColumn() - 2);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveLeft(boolean[][] mat, Position p) {
-            p.setValues(position.getRow(), position.getColumn() - 1);
+            p.setValues(position.getRow() - 2, position.getColumn() - 1);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveRight(boolean[][] mat, Position p) {
-        p.setValues(position.getRow(), position.getColumn() + 1);
+        p.setValues(position.getRow() - 2, position.getColumn() + 1);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveDown(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() + 1, position.getColumn());
+        p.setValues(position.getRow() - 1, position.getColumn() + 2);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveNW(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() - 1, position.getColumn() -1);
+        p.setValues(position.getRow() + 1, position.getColumn() + 2);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveNe(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() - 1, position.getColumn() + 1);
+        p.setValues(position.getRow() + 2, position.getColumn() + 1);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveSW(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() + 1, position.getColumn() - 1);
+        p.setValues(position.getRow() + 2, position.getColumn() - 1);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
     }
 
     public void moveSe(boolean[][] mat, Position p) {
-        p.setValues(position.getRow() + 1, position.getColumn() + 1);
+        p.setValues(position.getRow() + 1, position.getColumn() - 2);
         if(getBoard().positionExists(p) && isValidMove(p)){
             mat[p.getRow()][p.getColumn()] = true;
         }
@@ -100,7 +100,7 @@ public class King extends ChessPiece {
 
     @Override
     public String toString() {
-        return "K";
+        return "N";
     }
 
 }

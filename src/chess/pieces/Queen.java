@@ -1,13 +1,13 @@
-package chess.Pieces;
-import boardgame.Position;
+package chess.pieces;
+
 import boardgame.Board;
 import boardgame.Piece;
+import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-public class Rook extends ChessPiece {
-
-    public Rook(Board board, Color color) {
+public class Queen extends ChessPiece {
+    public Queen(Board board, Color color) {
         super(board, color);
     }
 
@@ -25,6 +25,14 @@ public class Rook extends ChessPiece {
         moveRight(mat, p);
         // below
         moveDown(mat, p);
+
+        moveNW(mat,p);
+        //Northeeast
+        moveNE(mat,p);
+        //Southwest
+        moveSW(mat,p);
+        //Southeast
+        moveSE(mat,p);
 
         return mat;
     }
@@ -73,6 +81,51 @@ public class Rook extends ChessPiece {
         }
     }
 
+    private void moveNW(boolean[][] mat, Position p) {
+        p.setValues(position.getRow() - 1, position.getColumn() - 1);
+        while (isValidMove(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+            if (getBoard().thereIsAPiece(p) && isThereOpponentPiece(p)) {
+                break;
+            }
+            p.setValues(p.getRow() - 1, p.getColumn() - 1);
+        }
+    }
+
+
+    private void moveNE(boolean[][] mat, Position p) {
+        p.setValues(position.getRow() -1, position.getColumn() + 1);
+        while (isValidMove(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+            if (getBoard().thereIsAPiece(p) && isThereOpponentPiece(p)) {
+                break; 
+            }
+            p.setValues(p.getRow() - 1, p.getColumn() + 1); 
+        }
+    }
+
+    private void moveSE(boolean[][] mat, Position p) {
+        p.setValues(position.getRow() + 1, position.getColumn() + 1);
+        while (isValidMove(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+            if (getBoard().thereIsAPiece(p) && isThereOpponentPiece(p)) {
+                break;
+            }
+            p.setValues(p.getRow() + 1, p.getColumn() + 1);
+        }
+    }
+
+    private void moveSW(boolean[][] mat, Position p) {
+        p.setValues(position.getRow() + 1, position.getColumn() - 1);
+        while (isValidMove(p)) {
+            mat[p.getRow()][p.getColumn()] = true;
+            if (getBoard().thereIsAPiece(p) && isThereOpponentPiece(p)) {
+                break; 
+            }
+            p.setValues(p.getRow() + 1, p.getColumn() - 1);
+        }
+    }
+
     private boolean isValidMove(Position p) {
         return getBoard().positionExists(p) && 
             ( !getBoard().thereIsAPiece(p) || isThereOpponentPiece(p) );
@@ -83,8 +136,10 @@ public class Rook extends ChessPiece {
         return piece != null && ((ChessPiece) piece).getColor() != getColor();
     }
 
+
+
     @Override
     public String toString() {
-        return "R";
+        return "Q";
     }
 }
