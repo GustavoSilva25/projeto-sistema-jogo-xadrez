@@ -2,6 +2,8 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import boardgame.Board;
 import boardgame.Piece;
@@ -12,6 +14,8 @@ public class ChessMatch {
     private int turn;
     private Color currentPlayer;
     private Board board;
+    private boolean check;
+    private boolean checkMate;
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>(); 
     private List<Piece> capturedPieces = new ArrayList<>(); 
@@ -28,9 +32,18 @@ public class ChessMatch {
         return turn;
     }
 
-    public Color getColor() {
+    public Color getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public boolean getCheck() {
+        return check;
+    }
+
+    public boolean getCheckMate() {
+        return checkMate;
+    } 
+
 
     public ChessPiece[][] getPieces() {
         ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
@@ -55,11 +68,24 @@ public class ChessMatch {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
-        nextTurn();
+
+        if(testCheck(currentPlayer)) {
+            undoMove(source, target, capturedPiece);
+            throw new ChessException("Você não pode se colocar em xeque");
+        }
+
+        check = (testCheck(opponent(currentPlayer))) ? true : false;
+        
+        if(testCheck(opponent(currentPlayer))) {
+            checkMate = true;
+        }
+        else {
+            nextTurn();
+        }
         return (ChessPiece)capturedPiece;
     }
 
-
+    // Validar a posição de origem antes de fazer o movimento.
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("Não há nenhuma peça na posição de origem");
@@ -72,18 +98,20 @@ public class ChessMatch {
         }
     }
 
+    // Validar a posição de destino antes de fazer o movimento. 
     private void validateTargetPosition(Position source, Position target) {
         if (!board.piece(source).possibleMove(target)) {
             throw new ChessException("A peça escolhida não pode se mover para a posição destino");
         }
     }
 
+    // Alternar o turno entre jogadores.
     private void nextTurn() {
         turn++;
         currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
-
+    // Realizar um movimento no tabuleiro.
     private Piece makeMove(Position source, Position target) {
         Piece p = board.removePiece(source);
         Piece capturedPiece = board.removePiece(target);
@@ -97,7 +125,72 @@ public class ChessMatch {
         return capturedPiece;
     }
 
+    // Desfazer um movimento no tabuleiro.
+    private void undoMove(Position source, Position target, Piece capturedPiece) {
+		Piece p = board.removePiece(target);
+		board.placePiece(p, source);
+		
+		if (capturedPiece != null) {
+			board.placePiece(capturedPiece, target);
+			capturedPieces.remove(capturedPiece);
+			piecesOnTheBoard.add(capturedPiece);
+		}
+	}
 
+    private Color opponent(Color color) {
+        return (color == Color.WHITE)? Color.BLACK : Color.WHITE; 
+    }
+
+    // Emcomtrar o rei de uma determinada cor no tabuleiro.
+    private ChessPiece  king(Color color) {
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece) x).getColor() == color).collect(Collectors.toList());
+        for (Piece piece : list) {
+            if (piece instanceof King) {
+                return (ChessPiece) piece;
+            }
+        }
+        throw new IllegalStateException("Não existe o Rei da "+color+" no tabuleiro!");
+    }
+
+    // verificar se um jogador está em xeque.
+    private boolean testCheck(Color color) {
+        Position kingPosition =  king(color).getPosition().toPosition();
+        List<Piece> opponentPieces = piecesOnTheBoard.stream().filter(x -> ((ChessPiece) x).getColor() == opponent(color)).collect(Collectors.toList());
+        
+        for (Piece piece : opponentPieces) {
+            boolean[][] mat = piece.possibleMoves();
+            if(mat[kingPosition.getRow()][kingPosition.getColumn()]) {
+                return true;
+            } 
+        } 
+        return false;
+    }
+
+    // verificar se um jogador está em xeque-mate. 
+    public boolean testCheckMate(Color color) {
+        if(!testCheck(color)){
+            return false;
+        }
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+        for (Piece p : list) {
+             boolean[][]  mat = p.possibleMoves();
+             for (int i = 0; i < board.getColumns(); i++) { 
+                for (int j = 0; j < board.getColumns(); j++) {
+                    if(mat[i][j]) {
+                        Position source = ((ChessPiece)p).getPosition().toPosition();
+                        Position target = new Position(i,j);
+                        Piece capturedPiece = makeMove(source, target);
+                        boolean testCheck = testCheck(color);
+                        undoMove(source, target, capturedPiece);
+                        if(!testCheck) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
     private void placeNewPiece(char column, int row, ChessPiece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
         piecesOnTheBoard.add(piece); 
